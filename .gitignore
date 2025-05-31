@@ -1,40 +1,43 @@
-# gradle
+# Gitignore for Fabric Minecraft Mod Projects
 
+# Gradle
 .gradle/
-build/
-out/
-classes/
+/build/
+/out/
+/classes/
+*.jar
+*.zip
+!gradle/wrapper/ # KEEP Gradle wrapper files for consistent builds across environments
+.gradle-cache/
+gradle-app.setting
 
-# eclipse
-
-*.launch
-
-# idea
-
+# IDE-specific files
 .idea/
 *.iml
 *.ipr
 *.iws
-
-# vscode
-
+.project
+.classpath
 .settings/
 .vscode/
-bin/
-.classpath
-.project
+/bin/ # Also good for IDE compile output, often overlaps with /build/
 
-# macos
+# Operating System Files
+.DS_Store
+Thumbs.db
 
-*.DS_Store
+# Fabric Loom / Minecraft Development specific
+/run/ # Contains local Minecraft instances, config, saves, and logs
+/.fabric/ # Fabric Loom's internal cache and generated sources
+/logs/ # Default Minecraft client log directory
+*.log # General log files
 
-# fabric
-
-run/
-
-# java
-
+# Java / JVM Crash Logs
 hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+# Mixin specific (if using Mixins)
+# For Loom versions that generate it in the project root
+# .mixin.out/
