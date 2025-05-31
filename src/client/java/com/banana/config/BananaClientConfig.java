@@ -17,7 +17,15 @@ public class BananaClientConfig {
 
     public boolean autoFishEnabled = false;
     public boolean nightVisionEnabled = false;
-    public boolean toggleSprintActive = false;
+    public boolean toggleSprintEnabled = false;
+    public boolean autoclickerEnabled = false;
+    public int autoclickerDelay = 5;
+    public int autoclickerMouseButton = 0;
+    public boolean autoclickerHoldToClick = true;
+    public boolean noFallEnabled = false;
+    public boolean flyEnabled = false;
+    public double flySpeedMultiplier = 1.0;
+    public boolean tpEnabled = false; // NEW: TP feature toggle
 
     private static BananaClientConfig instance;
 
@@ -31,7 +39,14 @@ public class BananaClientConfig {
     private static BananaClientConfig load() {
         if (CONFIG_FILE.exists()) {
             try (FileReader reader = new FileReader(CONFIG_FILE)) {
-                return GSON.fromJson(reader, BananaClientConfig.class);
+                BananaClientConfig loadedConfig = GSON.fromJson(reader, BananaClientConfig.class);
+                if (loadedConfig != null) {
+                    // Ensure new fields get default values if missing from old config file
+                    if (loadedConfig.autoclickerDelay == 0) loadedConfig.autoclickerDelay = 5;
+                    if (loadedConfig.flySpeedMultiplier == 0.0) loadedConfig.flySpeedMultiplier = 1.0;
+                    // No explicit check needed for new boolean fields as they default to false.
+                    return loadedConfig;
+                }
             } catch (IOException e) {
                 System.err.println("Failed to load Banana Client config: " + e.getMessage());
                 e.printStackTrace();
@@ -54,30 +69,67 @@ public class BananaClientConfig {
         }
     }
 
-    public boolean isAutoFishEnabled() {
-        return autoFishEnabled;
+    public boolean isAutoFishEnabled() { return autoFishEnabled; }
+    public void setAutoFishEnabled(boolean enabled) { this.autoFishEnabled = enabled; save(); }
+    public boolean isNightVisionEnabled() { return nightVisionEnabled; }
+    public void setNightVisionEnabled(boolean enabled) { this.nightVisionEnabled = enabled; save(); }
+    public boolean isToggleSprintEnabled() { return toggleSprintEnabled; }
+    public void setToggleSprintEnabled(boolean enabled) { this.toggleSprintEnabled = enabled; save(); }
+    public boolean isAutoclickerEnabled() { return autoclickerEnabled; }
+    public void setAutoclickerEnabled(boolean enabled) { this.autoclickerEnabled = enabled; save(); }
+    public int getAutoclickerDelay() { return autoclickerDelay; }
+    public void setAutoclickerDelay(int delay) { this.autoclickerDelay = Math.max(1, delay); save(); }
+    public int getAutoclickerMouseButton() { return autoclickerMouseButton; }
+    public void setAutoclickerMouseButton(int button) {
+        if (button == 0 || button == 1) {
+            this.autoclickerMouseButton = button;
+            save();
+        }
     }
 
-    public void setAutoFishEnabled(boolean enabled) {
-        this.autoFishEnabled = enabled;
+    public boolean isAutoclickerHoldToClick() {
+        return autoclickerHoldToClick;
+    }
+
+    public void setAutoclickerHoldToClick(boolean holdToClick) {
+        this.autoclickerHoldToClick = holdToClick;
         save();
     }
 
-    public boolean isNightVisionEnabled() {
-        return nightVisionEnabled;
+    public boolean isNoFallEnabled() {
+        return noFallEnabled;
     }
 
-    public void setNightVisionEnabled(boolean enabled) {
-        this.nightVisionEnabled = enabled;
+    public void setNoFallEnabled(boolean enabled) {
+        this.noFallEnabled = enabled;
         save();
     }
 
-    public boolean isToggleSprintActive() {
-        return toggleSprintActive;
+    public boolean isFlyEnabled() {
+        return flyEnabled;
     }
 
-    public void setToggleSprintActive(boolean active) {
-        this.toggleSprintActive = active;
+    public void setFlyEnabled(boolean enabled) {
+        this.flyEnabled = enabled;
+        save();
+    }
+
+    public double getFlySpeedMultiplier() {
+        return flySpeedMultiplier;
+    }
+
+    public void setFlySpeedMultiplier(double multiplier) {
+        this.flySpeedMultiplier = Math.max(0.1, Math.min(10.0, multiplier));
+        save();
+    }
+
+    // NEW: Getter and Setter for TP
+    public boolean isTpEnabled() {
+        return tpEnabled;
+    }
+
+    public void setTpEnabled(boolean enabled) {
+        this.tpEnabled = enabled;
         save();
     }
 }

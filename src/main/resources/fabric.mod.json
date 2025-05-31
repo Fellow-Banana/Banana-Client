@@ -20,7 +20,12 @@
 		],
 		"client": [
 			"com.banana.features.autofishing.AutoFishingMod",
-			"com.banana.features.nightvision.NightVision"
+			"com.banana.features.nightvision.NightVision",
+			"com.banana.features.togglesprint.ToggleSprint",
+			"com.banana.features.autoclicker.AutoClicker",
+			"com.banana.features.nofall.NoFall",
+			"com.banana.features.fly.Fly",
+			"com.banana.BananaClient"
 		]
 	},
 	"mixins": [

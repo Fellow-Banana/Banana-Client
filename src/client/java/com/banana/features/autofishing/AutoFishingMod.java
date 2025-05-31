@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text; // Import for Text
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 
@@ -60,6 +61,14 @@ public class AutoFishingMod implements ClientModInitializer {
                 }
                 break;
             }
+        }
+    }
+
+    // Helper method for chat messages
+    public static void sendToggleMessage(MinecraftClient client, boolean enabled) {
+        if (client != null && client.player != null) {
+            String status = enabled ? "§aON" : "§cOFF";
+            client.player.sendMessage(Text.literal("AutoFishing: " + status), false);
         }
     }
 }
