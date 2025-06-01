@@ -4,10 +4,11 @@ import com.banana.config.BananaClientConfig;
 import com.banana.features.autoclicker.AutoClicker;
 import com.banana.features.autofishing.AutoFishingMod;
 import com.banana.features.fly.Fly;
-import com.banana.features.nightvision.NightVision;
+import com.banana.features.nightvision.NightVision; // Corrected import for NightVision
+import com.banana.features.nohunger.NoHunger; // NEW: Import NoHunger
 import com.banana.features.nofall.NoFall;
 import com.banana.features.togglesprint.ToggleSprint;
-import com.banana.features.tp.TP; // NEW: Import TP
+import com.banana.features.tp.TP;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -21,7 +22,7 @@ public class BananaClientConfigScreen extends Screen {
     private final BananaClientConfig config;
 
     private ButtonWidget flySpeedLabel;
-    private ButtonWidget autoclickerDelayLabel; // NEW: Reference for autoclicker delay label
+    private ButtonWidget autoclickerDelayLabel;
 
     public BananaClientConfigScreen(Screen parent) {
         super(Text.literal("Banana Client Settings"));
@@ -59,10 +60,24 @@ public class BananaClientConfigScreen extends Screen {
                     boolean newState = !config.isNightVisionEnabled();
                     config.setNightVisionEnabled(newState);
                     button.setMessage(getNightVisionButtonText());
-                    NightVision.sendToggleMessage(MinecraftClient.getInstance(), newState);
+                    NightVision.sendToggleMessage(MinecraftClient.getInstance(), newState); // Corrected to NightVision
                 }
         ).position(centerX - buttonWidth / 2, currentY).size(buttonWidth, buttonHeight).build();
         this.addDrawableChild(nightVisionButton);
+
+        currentY += buttonHeight + 5;
+
+        // NEW: No Hunger Button
+        ButtonWidget noHungerButton = ButtonWidget.builder(
+                getNoHungerButtonText(),
+                button -> {
+                    boolean newState = !config.isNoHungerEnabled();
+                    config.setNoHungerEnabled(newState);
+                    button.setMessage(getNoHungerButtonText());
+                    NoHunger.sendToggleMessage(MinecraftClient.getInstance(), newState);
+                }
+        ).position(centerX - buttonWidth / 2, currentY).size(buttonWidth, buttonHeight).build();
+        this.addDrawableChild(noHungerButton);
 
         currentY += buttonHeight + 5;
 
@@ -137,9 +152,9 @@ public class BananaClientConfigScreen extends Screen {
         ).position(centerX - buttonWidth / 2 + thirdWidth + 5 + thirdWidth / 2 + 5, currentY).size(thirdWidth / 2, buttonHeight).build();
         this.addDrawableChild(flySpeedIncreaseButton);
 
-        currentY += buttonHeight + 5; // NEW: Space for TP button
+        currentY += buttonHeight + 5;
 
-        // NEW: TP Button
+        // TP Button
         ButtonWidget tpButton = ButtonWidget.builder(
                 getTpButtonText(),
                 button -> {
@@ -169,7 +184,7 @@ public class BananaClientConfigScreen extends Screen {
         currentY += buttonHeight + 5;
 
         // Autoclicker Delay Label
-        autoclickerDelayLabel = ButtonWidget.builder( // Assign to the field
+        autoclickerDelayLabel = ButtonWidget.builder(
                 getAutoclickerDelayText(),
                 button -> {}
         ).position(centerX - buttonWidth / 2, currentY).size(thirdWidth, buttonHeight).build();
@@ -181,7 +196,7 @@ public class BananaClientConfigScreen extends Screen {
                 Text.literal("-"),
                 button -> {
                     config.setAutoclickerDelay(config.getAutoclickerDelay() - 1);
-                    autoclickerDelayLabel.setMessage(getAutoclickerDelayText()); // Update label
+                    autoclickerDelayLabel.setMessage(getAutoclickerDelayText());
                 }
         ).position(centerX - buttonWidth / 2 + thirdWidth + 5, currentY).size(thirdWidth / 2, buttonHeight).build();
         this.addDrawableChild(autoclickerDelayDecreaseButton);
@@ -191,7 +206,7 @@ public class BananaClientConfigScreen extends Screen {
                 Text.literal("+"),
                 button -> {
                     config.setAutoclickerDelay(config.getAutoclickerDelay() + 1);
-                    autoclickerDelayLabel.setMessage(getAutoclickerDelayText()); // Update label
+                    autoclickerDelayLabel.setMessage(getAutoclickerDelayText());
                 }
         ).position(centerX - buttonWidth / 2 + thirdWidth + 5 + thirdWidth / 2 + 5, currentY).size(thirdWidth / 2, buttonHeight).build();
         this.addDrawableChild(autoclickerDelayIncreaseButton);
@@ -258,7 +273,6 @@ public class BananaClientConfigScreen extends Screen {
         return Text.literal("Speed: §b" + String.format("%.1f", config.getFlySpeedMultiplier()) + "x");
     }
 
-    // NEW: TP Button Text
     private Text getTpButtonText() {
         return Text.literal("TP: " + (config.isTpEnabled() ? "§aON" : "§cOFF"));
     }
@@ -278,6 +292,11 @@ public class BananaClientConfigScreen extends Screen {
 
     private Text getAutoclickerHoldToClickText() {
         return Text.literal("Hold to Click: " + (config.isAutoclickerHoldToClick() ? "§aON" : "§cOFF"));
+    }
+
+    // NEW: No Hunger Button Text
+    private Text getNoHungerButtonText() {
+        return Text.literal("No Hunger: " + (config.isNoHungerEnabled() ? "§aON" : "§cOFF"));
     }
 
     @Override

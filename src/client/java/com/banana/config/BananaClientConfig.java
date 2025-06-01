@@ -25,7 +25,8 @@ public class BananaClientConfig {
     public boolean noFallEnabled = false;
     public boolean flyEnabled = false;
     public double flySpeedMultiplier = 1.0;
-    public boolean tpEnabled = false; // NEW: TP feature toggle
+    public boolean tpEnabled = false;
+    public boolean noHungerEnabled = false; // This is correctly defined
 
     private static BananaClientConfig instance;
 
@@ -44,7 +45,7 @@ public class BananaClientConfig {
                     // Ensure new fields get default values if missing from old config file
                     if (loadedConfig.autoclickerDelay == 0) loadedConfig.autoclickerDelay = 5;
                     if (loadedConfig.flySpeedMultiplier == 0.0) loadedConfig.flySpeedMultiplier = 1.0;
-                    // No explicit check needed for new boolean fields as they default to false.
+                    // For boolean fields, GSON defaults them to false if not present, which is usually desired.
                     return loadedConfig;
                 }
             } catch (IOException e) {
@@ -69,6 +70,7 @@ public class BananaClientConfig {
         }
     }
 
+    // Getters and Setters
     public boolean isAutoFishEnabled() { return autoFishEnabled; }
     public void setAutoFishEnabled(boolean enabled) { this.autoFishEnabled = enabled; save(); }
     public boolean isNightVisionEnabled() { return nightVisionEnabled; }
@@ -81,7 +83,7 @@ public class BananaClientConfig {
     public void setAutoclickerDelay(int delay) { this.autoclickerDelay = Math.max(1, delay); save(); }
     public int getAutoclickerMouseButton() { return autoclickerMouseButton; }
     public void setAutoclickerMouseButton(int button) {
-        if (button == 0 || button == 1) {
+        if (button == 0 || button == 1) { // 0 for left click, 1 for right click
             this.autoclickerMouseButton = button;
             save();
         }
@@ -119,11 +121,10 @@ public class BananaClientConfig {
     }
 
     public void setFlySpeedMultiplier(double multiplier) {
-        this.flySpeedMultiplier = Math.max(0.1, Math.min(10.0, multiplier));
+        this.flySpeedMultiplier = Math.max(0.1, Math.min(10.0, multiplier)); // Clamp between 0.1 and 10.0
         save();
     }
 
-    // NEW: Getter and Setter for TP
     public boolean isTpEnabled() {
         return tpEnabled;
     }
@@ -132,4 +133,7 @@ public class BananaClientConfig {
         this.tpEnabled = enabled;
         save();
     }
+
+    public boolean isNoHungerEnabled() { return noHungerEnabled; } // New: Getter for NoHunger.java
+    public void setNoHungerEnabled(boolean enabled) { this.noHungerEnabled = enabled; save(); } // New: Setter for NoHunger.java
 }
